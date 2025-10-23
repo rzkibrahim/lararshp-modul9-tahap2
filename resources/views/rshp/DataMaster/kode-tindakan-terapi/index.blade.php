@@ -18,8 +18,5 @@
             <td>{{ $item->idkategori_klinis }}</td>
         </tr>
         @endforeach
-        <tr class="text-center">
-            <td colspan="5">... Terdapat 35 data tindakan/terapi di database ...</td>
-        </tr>
     </tbody>
 </table>

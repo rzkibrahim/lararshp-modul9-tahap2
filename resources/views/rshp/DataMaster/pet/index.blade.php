@@ -20,8 +20,5 @@
             <td>{{ $pet->idras_hewan }}</td>
         </tr>
         @endforeach
-        <tr class="text-center">
-            <td colspan="6">... Terdapat 11 data pet di database ...</td>
-        </tr>
     </tbody>
 </table>

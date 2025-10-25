@@ -21,6 +21,6 @@ class User extends Model
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user', 'iduser', 'idrole')
-            ->withPivot('status');
+            ->withPivot('status', 'idrole_user');
     }
 }

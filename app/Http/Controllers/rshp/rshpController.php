@@ -30,9 +30,8 @@ class rshpController extends Controller
     public function cekKoneksi()
     {
         try {
-            // Coba koneksi ke database
-            \DB::connection()->getPdo();
-            return  'Koneksi database berhasil!';
+            DB::connection()->getPdo();
+            return 'Koneksi database berhasil!';
         } catch (\Exception $e) {
             return 'Gagal koneksi database: ' . $e->getMessage();
         }

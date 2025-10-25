@@ -11,9 +11,10 @@ class Role extends Model
     
     protected $fillable = ['nama_role'];
     
-    // One to Many dengan Role User
-    public function roleUsers()
+    // Many to Many dengan User
+    public function user()
     {
-        return $this->hasMany(RoleUser::class, 'idrole', 'idrole');
+        return $this->belongsToMany(User::class, 'role_user', 'idrole', 'iduser')
+            ->withPivot('status', 'idrole_user');
     }
 }

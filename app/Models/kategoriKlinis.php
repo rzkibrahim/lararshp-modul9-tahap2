@@ -16,4 +16,9 @@ class KategoriKlinis extends Model
     {
         return $this->belongsTo(Kategori::class, 'idkategori', 'idkategori');
     }
+
+    public function kodeTindakanTerapi()
+    {
+        return $this->hasMany(KodeTindakanTerapi::class, 'idkategori_klinis', 'idkategori_klinis');
+    }
 }

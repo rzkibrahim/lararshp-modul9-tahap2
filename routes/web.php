@@ -14,40 +14,40 @@ Route::get('/struktur', [rshpController::class, 'struktur'])->name('struktur');
 Route::get('/layanan', [rshpController::class, 'layanan'])->name('layanan');
 Route::get('/visi-misi', [rshpController::class, 'visiMisi'])->name('visi-misi');
 
-route::get('/datamaster/user', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user.index');
-route::get('/datamaster/pemilik', [App\Http\Controllers\Admin\PemilikController::class, 'index'])->name('admin.pemilik.index');
-route::get('/datamaster/pet', [App\Http\Controllers\Admin\PetController::class, 'index'])->name('admin.pet.index');
-route::get('/datamaster/jenis-hewan', [App\Http\Controllers\Admin\JenisHewanController::class, 'index'])->name('admin.jenis-hewan.index');   
-route::get('/datamaster/ras-hewan', [App\Http\Controllers\Admin\RasHewanController::class, 'index'])->name('admin.ras-hewan.index');    
-route::get('/datamaster/role', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.role.index');
-route::get('/datamaster/kategori', [App\Http\Controllers\Admin\KategoriController::class, 'index'])->name('admin.kategori.index');
-route::get('/datamaster/kk', [App\Http\Controllers\Admin\KategoriKlinisController::class, 'index'])->name('admin.kategori-klinis.index');
-route::get('/datamaster/ktt', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'index'])->name('admin.kode-tindakan-terapi.index');
+// Authentication Routes
+Auth::routes();
 
-use App\Http\Controllers\Admin\KategoriController;
-use App\Http\Controllers\Admin\KategoriKlinisController;
-use App\Http\Controllers\Admin\KodeTindakanTerapiController;
-
-Route::prefix('admin')->name('admin.')->group(function () {
-    
-    // Kategori
-    Route::resource('kategori', KategoriController::class);
-    
-    // Kategori Klinis
-    Route::resource('kategoriKlinis', KategoriKlinisController::class);
-    
-    // Kode Tindakan Terapi
-    Route::resource('kodeTindakanTerapi', KodeTindakanTerapiController::class);
+// Tambahkan di routes/web.php (temporary)
+Route::get('/force-logout', function() {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/')->with('success', 'Logout berhasil');
 });
 
-// INI ROTE LOGIN/LOGOUT
-// Tampilkan halaman login
-Route::get('/login', function () {
-    return view('rshp.auth.login'); // sesuaikan path blade kamu
-})->name('login');
+// Tambahkan di routes/web.php (temporary)
+Route::get('/check-auth', function() {
+    if (Auth::check()) {
+        return 'User sedang login: ' . Auth::user()->email;
+    }
+    return 'User belum login';
+});
 
-// Proses form login (POST)
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+// akses Admin
+route::middleware(['isAdministrator'])->group(function () {
+    route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardAdminController::class, 'index'])->name('admin.dashboard');
+    route::get('/datamaster/user', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user.index');
+    route::get('/datamaster/pemilik', [App\Http\Controllers\Admin\PemilikController::class, 'index'])->name('admin.pemilik.index');
+    route::get('/datamaster/pet', [App\Http\Controllers\Admin\PetController::class, 'index'])->name('admin.pet.index');
+    route::get('/datamaster/jenis-hewan', [App\Http\Controllers\Admin\JenisHewanController::class, 'index'])->name('admin.jenis-hewan.index');
+    route::get('/datamaster/ras-hewan', [App\Http\Controllers\Admin\RasHewanController::class, 'index'])->name('admin.ras-hewan.index');
+    route::get('/datamaster/role', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.role.index');
+    route::get('/datamaster/kategori', [App\Http\Controllers\Admin\KategoriController::class, 'index'])->name('admin.kategori.index');
+    route::get('/datamaster/kk', [App\Http\Controllers\Admin\KategoriKlinisController::class, 'index'])->name('admin.kategori-klinis.index');
+    route::get('/datamaster/ktt', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'index'])->name('admin.kode-tindakan-terapi.index');
+});
 
-// Logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// akses Resepsionis
+Route::middleware(['isResepsionis'])->group(function () {
+    Route::get('/resepsionis/dashboard', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'index'])->name('resepsionis.dashboard');
+}); 

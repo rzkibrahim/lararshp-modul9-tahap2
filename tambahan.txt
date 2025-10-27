@@ -1,0 +1,31 @@
+web.php
+// INI ROTE LOGIN/LOGOUT
+// Tampilkan halaman login
+Route::get('/login', function () {
+    return view('rshp.auth.login'); // sesuaikan path blade kamu
+})->name('login');
+
+// Proses form login (POST)
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+web.php
+use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\KategoriKlinisController;
+use App\Http\Controllers\Admin\KodeTindakanTerapiController;
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    
+    // Kategori
+    Route::resource('kategori', KategoriController::class);
+    
+    // Kategori Klinis
+    Route::resource('kategoriKlinis', KategoriKlinisController::class);
+    
+    // Kode Tindakan Terapi
+    Route::resource('kodeTindakanTerapi', KodeTindakanTerapiController::class);
+});
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
